@@ -1,0 +1,2 @@
+# The 'local/' folder should NEVER be committed
+local/ 
