@@ -11,7 +11,7 @@ class PasswordFileOperator:
         elif username not in [entry["username"] for entry in file_json_data[origin]]:
             self.__append_origin_entry(origin, username, nonce, ciphertext)
         else:
-            self.__overwrite_origin_entry(origin, nonce, ciphertext)
+            self.__overwrite_origin_entry(origin, username, nonce, ciphertext)
 
     #######################
     ### PRIVATE METHODS ###
@@ -56,12 +56,14 @@ class PasswordFileOperator:
         file_json_data[origin].append(new_json_data)
         self.__write_file(file_json_data)
 
-    def __overwrite_origin_entry(self, origin, new_nonce, new_ciphertext):
+    def __overwrite_origin_entry(self, origin, username, new_nonce, new_ciphertext):
         file_json_data = self.__get_file_contents()
 
         for entry in file_json_data[origin]:
-            if entry["username"] == file_json_data[origin]["username"]:
+            if entry["username"] == username:
                 entry["decrypt_info"] = {
                     "nonce": new_nonce,
                     "ciphertext": new_ciphertext
                 }
+
+        self.__write_file(file_json_data)
