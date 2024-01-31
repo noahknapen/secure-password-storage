@@ -1,12 +1,15 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from aes_256_ctr import AES256CTR
-from sha_256 import SHA256
 import json
 import os
 
+from aes_256_ctr import AES256CTR
+from sha_256 import SHA256
+from password_file_operator import PasswordFileOperator
+
 def main():
     origin = input("Enter password origin: ")
+    username = input("Enter username used in origin: ")
     data = input("Enter password: ")
     key = input("Enter key: ")
 
@@ -17,21 +20,11 @@ def main():
     nonce = cipher.get_readable_nonce()
     ciphertext = cipher.encrypt(data)
 
-    json_data = {
-        "origin": origin,
-        "decrypt_info": {
-            "nonce": nonce,
-            "ciphertext": ciphertext
-        }
-    }
+    pw_operator = PasswordFileOperator("../local/encrypted_passwords.json")
+    pw_operator.new_origin_entry(origin, username, nonce, ciphertext)
 
+        
+if __name__ == "__main__":
     dir_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(dir_path)
-
-    #! write operation overwrites entire file
-    with open("../local/encrypted_passwords.json", "w") as file: #TODO: What if file doesn't exist?
-        json.dump(json_data, file, indent=4)
-
-    
-if __name__ == "__main__":
     main()
