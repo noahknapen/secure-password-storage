@@ -21,7 +21,7 @@ def main():
     ciphertext = cipher.encrypt(data)
 
     pw_operator = PasswordFileOperator("../local/encrypted_passwords.json")
-    pw_operator.new_origin_entry(origin, username, nonce, ciphertext)
+    pw_operator.add_origin_entry(origin, username, nonce, ciphertext)
 
         
 if __name__ == "__main__":
